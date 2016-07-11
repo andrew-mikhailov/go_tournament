@@ -43,7 +43,7 @@
             MainCtrl.players[p].lost =
               MainCtrl.players[p].draw = 0;
                 MainCtrl.players[p].points = 0;
-          MainCtrl.players[p].rank = 1;
+          MainCtrl.players[p].rank = 0;
           MainCtrl.players[p].id = p;
         }
       };
