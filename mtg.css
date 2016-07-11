@@ -1,0 +1,80 @@
+body {
+
+}
+
+header {
+	border-bottom:1px solid silver;
+	padding: 25px;
+	margin-bottom: 25px;
+	color: #FFF;
+	background-color: #000;
+}
+
+header h1 {
+	color: #FFF;
+}
+
+.main {
+	padding-left:25px;
+	padding-right:25px;
+}
+
+.match {
+	border-radius: 5px;	
+	padding: 15px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.match h1,h2,h3,h4 {
+	text-align: left;
+}
+
+.match.queued {
+	background-color: #C1C3FF;
+	color: #7E7FC3;
+}
+
+.match.playing {
+	background-color: #C7F7CD;
+	color: #6E9C74;
+}
+
+.match.ended {
+	background-color: #CCCCCC;
+	color: #333333;
+}
+
+.match input[type="text"] {
+	text-align: center;
+}
+
+.match .divider {
+	padding-top: 10px;
+}
+
+.blink {
+  animation: blink 1.5s steps(5, start) infinite;
+  -webkit-animation: blink 1.5s steps(5, start) infinite;
+}
+@keyframes blink {
+  to { visibility: hidden; }
+}
+@-webkit-keyframes blink {
+  to { visibility: hidden; }
+}
+
+/*
+	Kludge, but eh
+*/
+.gold {
+	color: gold;
+}
+
+.silver {
+	color: silver;
+}
+
+.bronze {
+	color: bronze;
+}

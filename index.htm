@@ -1,0 +1,117 @@
+<!DOCTYPE>
+<html>
+<head>
+	<title>MTG</title>
+	<link rel="stylesheet" href="kube.min.css">
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="mtg.css">
+	
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular-route.min.js"></script>
+	<script src="timer.js"></script>
+	<script src="mtg.js"></script>
+</head>
+<body ng-app="mtg" ng-controller='main'>
+	<header>
+		<h1>{{title}}</h1>
+		<a ng-click="reset()">Reset</a>
+	</header>
+	<main>
+	<div class="units-row" ng-show="!inited">	
+		<div class="unit-40 unit-centered">
+			<form class="forms">
+			<label>
+				Name of the tournament
+				<input type="text" ng-model="title" class="width-100">
+			</label>
+			</form>
+			<p>List the players who will be in this tournament.</p>
+			<div class="table-container">					
+				<table class="width-100">
+					<tr ng-repeat="player in players">
+						<td>{{$index+1}}</td>
+						<td><input type="text" ng-model="player.name" class="width-100" placeholder="Name"></td>
+					</tr>				
+				</table> 
+			</div>
+			<hr>
+			<button class="btn" ng-click="players.push({})">Add Player</button>
+			<button class="btn btn-green" ng-click="init()">Done</button>
+			
+		</div>
+	</div>
+			
+	<div class="units-row main" ng-show="inited">	
+		<div class="unit-60">
+			<h2>Current Scoreboard</h2>				
+			<div class="table-container">
+				 <table class="width-100">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Name</th>
+							<th>Win / Draw / Lose</th>
+							<th>Played</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="player in players | orderBy:['-won','-draw']">
+							<td>
+								<i class="fa fa-trophy gold" ng-show="player.rank == 1"></i>
+								<i class="fa fa-trophy silver" ng-show="player.rank == 2"></i>
+								<i class="fa fa-trophy bronze" ng-show="player.rank == 3"></i>
+								 {{player.rank}}</td>
+							<td>{{player.name}}</td>
+							<td>{{player.won}} / {{player.draw}} / {{player.lost}}</td>
+							<td>{{player.won + player.lost + player.draw}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+				
+		<div class="unit-40">
+			<h2>Matches</h2>				
+			<p>Matches left: {{getMatchesLeft()}}</p>
+			<form class="forms width-100">
+				<div ng-repeat="match in matches | orderBy:matchEvaluator" class="match units-row width-100" ng-class="match.status">
+					<h4>#{{match.index+1}}</h4>							
+					<div class="unit-centered unit-70 units-row end">
+						<div class="unit-40">							
+							<label>
+								{{match.players[0].name}}
+								<input type="text" ng-model="match.scores[0]" class="width-100"  required>
+							</label> 							
+						</div>
+						
+						<div class="unit-20 divider">
+							-
+						</div>
+
+						<div class="unit-40">							
+							<label>
+								{{match.players[1].name}}
+								<input type="text" ng-model="match.scores[1]" class="width-100" required>
+							</label> 						
+						</div>	
+					</div>
+					<div class="left" ng-show="match.status == 'playing'">
+						<timer endtime="match.endtime"></timer>
+					</div>
+					<div class="right">
+						<button class="btn" ng-show="match.status == 'queued'" ng-click="startMatch(match)">Start Match</button>
+						<button class="btn" ng-show="match.status == 'playing'" ng-click="endMatch(match)">End Match</button>
+						<button class="btn" ng-show="match.status == 'ended'" ng-click="editMatch(match)">Edit Match</button>
+					</div>				
+				</div>
+			</form>
+		</div>
+		
+		</div>
+		</div>
+	</div>
+	</main>
+</body>
+</html>
