@@ -1,0 +1,27 @@
+{
+  "name": "Go tournament",
+  "homepage": "https://github.com/andrew-mikhailov/go_tournament",
+  "authors": [
+    "Andrew Mikhailov <Andrew.Mikhailov.18.01@gmail.com>"
+  ],
+  "description": "Go tournament",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "jquery-ui": "^1.11.4",
+    "angular-material": "^1.0.7",
+    "angular-ui-router": "^0.2.18",
+    "angular-sanitize": "^1.5.3"
+  },
+  "resolutions": {
+    "angular": "1.5.5"
+  }
+}
