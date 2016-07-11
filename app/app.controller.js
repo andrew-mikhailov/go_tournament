@@ -62,6 +62,11 @@
           }
         }
       };
+      
+      MainCtrl.disableMatch = function (status) {
+        var statuses = ['queued', 'ended'];
+        return statuses.indexOf(status) != -1;
+      };
 
       MainCtrl.createMatches = function () {
         var i;
@@ -166,20 +171,20 @@
         match.status = 'playing';
         if (Number(match.scores[0]) > Number(match.scores[1])) {
           match.players[0].won -= 1;
-          match.players[0].points += 1 +
+          match.players[0].points -= 1 +
             (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
 
           match.players[1].lost -= 1;
-          match.players[1].points +=
+          match.players[1].points -=
             (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
         }
         else {
           match.players[1].won -= 1;
-          match.players[1].points += 1 +
+          match.players[1].points -= 1 +
             (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
 
           match.players[0].lost -= 1;
-          match.players[0].points +=
+          match.players[0].points -=
             (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
         }
         MainCtrl.updatePlayerRanks();

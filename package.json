@@ -1,0 +1,25 @@
+{
+  "name": "go_tournament",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "ejs": "^2.4.2",
+    "express": "^4.14.0",
+    "express-ejs-layouts": "^2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrew-mikhailov/go_tournament.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrew-mikhailov/go_tournament/issues"
+  },
+  "homepage": "https://github.com/andrew-mikhailov/go_tournament#readme"
+}

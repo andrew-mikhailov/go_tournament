@@ -19,7 +19,8 @@
     "jquery-ui": "^1.11.4",
     "angular-material": "^1.0.7",
     "angular-ui-router": "^0.2.18",
-    "angular-sanitize": "^1.5.3"
+    "angular-sanitize": "^1.5.3",
+    "angular-gravatar": "^0.4.2"
   },
   "resolutions": {
     "angular": "1.5.5"

@@ -5,6 +5,7 @@
     .module('go_tournament', [
       'timer',
       'ui.router',
+      'ui.gravatar',
       'ngSanitize'
     ]);
 
