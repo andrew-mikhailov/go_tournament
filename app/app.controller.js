@@ -5,7 +5,7 @@
     .module('go_tournament')
     .controller('MainController', function ($filter, TournamentConfig) {
       var MainCtrl = this;
-        
+
       MainCtrl.matches = [];
       MainCtrl.players = TournamentConfig.players;
       var orderBy = $filter('orderBy');
@@ -39,11 +39,11 @@
 
       MainCtrl.initPlayers = function () {
         for (var p = 0; p < MainCtrl.players.length; p++) {
-          MainCtrl.players[p].won =
-            MainCtrl.players[p].lost =
-              MainCtrl.players[p].draw = 0;
-                MainCtrl.players[p].points = 0;
-          MainCtrl.players[p].rank = 0;
+          MainCtrl.players[p].won = MainCtrl.players[p].won || 0;
+          MainCtrl.players[p].lost = MainCtrl.players[p].lost || 0;
+          MainCtrl.players[p].draw = MainCtrl.players[p].draw || 0;
+          MainCtrl.players[p].points = MainCtrl.players[p].points || 0;
+          MainCtrl.players[p].rank = MainCtrl.players[p].rank || 0;
           MainCtrl.players[p].id = p;
         }
       };
@@ -62,7 +62,7 @@
           }
         }
       };
-      
+
       MainCtrl.disableMatch = function (status) {
         var statuses = ['queued', 'ended'];
         return statuses.indexOf(status) != -1;
@@ -135,7 +135,7 @@
             i--;
           }
         }
-        
+
         MainCtrl.inited = true;
         MainCtrl.initPlayers();
         MainCtrl.createMatches();
