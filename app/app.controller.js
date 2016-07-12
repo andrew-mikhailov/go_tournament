@@ -7,7 +7,7 @@
       var MainCtrl = this;
         
       MainCtrl.matches = [];
-      MainCtrl.players = [{}, {}];
+      MainCtrl.players = TournamentConfig.players;
       var orderBy = $filter('orderBy');
 
       MainCtrl.importFromStorage = function () {
@@ -218,7 +218,7 @@
 
       MainCtrl.reset = function () {
         MainCtrl.matches = [];
-        MainCtrl.players = [{}, {}];
+        MainCtrl.players = TournamentConfig.players;
         MainCtrl.inited = false;
         MainCtrl.exportToStorage();
       };

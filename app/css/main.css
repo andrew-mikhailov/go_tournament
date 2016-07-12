@@ -7,7 +7,7 @@ header {
     padding: 25px;
     margin-bottom: 25px;
     color: #FFF;
-    background-color: #000;
+    background-color: rgba(255, 129, 0, 0.75);
 }
 
 header h1 {
@@ -31,8 +31,8 @@ header h1 {
 }
 
 .match.queued {
-    background-color: #C1C3FF;
-    color: #7E7FC3;
+    background-color: #D2D2D4;
+    color: #bfbdc3;
 }
 
 .match.playing {
@@ -41,7 +41,7 @@ header h1 {
 }
 
 .match.ended {
-    background-color: #CCCCCC;
+    background-color: #db665c;
     color: #333333;
 }
 
@@ -91,4 +91,18 @@ header h1 {
 
 input.input-score {
     border-radius: 5px;
+}
+
+button.btn {
+    color: #ffffff;
+    background-color: rgba(255, 129, 0, 0.75);
+}
+
+.reset-btn {
+    color: #ffffff;
+}
+
+
+.reset-btn:hover {
+    color: #171617;
 }

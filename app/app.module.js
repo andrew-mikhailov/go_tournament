@@ -7,6 +7,9 @@
       'ui.router',
       'ui.gravatar',
       'ngSanitize'
-    ]);
+    ])
+    .config(['$compileProvider', function ($compileProvider) {
+      $compileProvider.debugInfoEnabled(false);
+    }]);
 
 })(angular);

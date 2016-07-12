@@ -1,10 +1,18 @@
 <div ng-controller='MainController as MainCtrl'>
   <header>
+    <img
+        src="http://ncsmash.com/images/bracketIcon.png"
+        height="60px"
+        width="60px"
+        style="float: left; margin: 0 20px auto 0">
     <h1>{{ MainCtrl.title }}</h1>
-    <a ng-click="MainCtrl.reset()">Reset</a>
+    <a ng-click="MainCtrl.reset()"
+      class="reset-btn">
+      Reset
+    </a>
   </header>
   <main>
-    <div class="units-row" ng-show="!MainCtrl.inited">
+    <div class="units-row" ng-if="!MainCtrl.inited">
       <div class="unit-40 unit-centered">
         <form class="forms">
           <label>
@@ -23,12 +31,12 @@
         </div>
         <hr>
         <button class="btn" ng-click="MainCtrl.players.push({})">Add Player</button>
-        <button class="btn btn-green" ng-click="MainCtrl.init()">Done</button>
+        <button class="btn btn-black" ng-click="MainCtrl.init()">Done</button>
 
       </div>
     </div>
 
-    <div class="units-row main" ng-show="MainCtrl.inited">
+    <div class="units-row main" ng-if="MainCtrl.inited">
       <div class="unit-60">
         <h2>Current Scoreboard</h2>
         <div class="table-container">
@@ -97,13 +105,13 @@
                 </label>
               </div>
             </div>
-            <div class="left" ng-show="match.status == 'playing'">
+            <div class="left" ng-if="match.status == 'playing'">
               <timer endtime="match.endtime"></timer>
             </div>
-            <div class="right">
-              <button class="btn" ng-show="match.status == 'queued'" ng-click="MainCtrl.startMatch(match)">Start Match</button>
-              <button class="btn" ng-show="match.status == 'playing'" ng-click="MainCtrl.endMatch(match)">End Match</button>
-              <button class="btn" ng-show="match.status == 'ended'" ng-click="MainCtrl.editMatch(match)">Edit Match</button>
+            <div class="center">
+              <button class="btn btn-black" ng-if="match.status == 'queued'" ng-click="MainCtrl.startMatch(match)">Start Match</button>
+              <button class="btn btn-black" ng-if="match.status == 'playing'" ng-click="MainCtrl.endMatch(match)">End Match</button>
+              <button class="btn btn-black" ng-if="match.status == 'ended'" ng-click="MainCtrl.editMatch(match)">Edit Match</button>
             </div>
           </div>
         </form>
