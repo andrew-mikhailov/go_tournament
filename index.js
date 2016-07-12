@@ -9,6 +9,9 @@ var express = require('express'),
 
 app.use(expressLayouts);
 app.use('/app', express.static(__dirname + '/app'));
+app.all("/*", function(req, res, next) {
+  res.render('home/home');
+});
 
 app.set('views', './views');
 app.set('view engine', 'ejs');

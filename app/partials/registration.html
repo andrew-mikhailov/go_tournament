@@ -1,0 +1,28 @@
+<header>
+  <h1>{{ RegistrationFormCtrl.title }}</h1>
+  <a ng-click="RegistrationFormCtrl.reset()">Reset</a>
+</header>
+<main>
+  <div class="units-row">
+    <div class="unit-40 unit-centered">
+      <form class="forms">
+        <label>
+          Name of the tournament
+          <input type="text" ng-model="RegistrationFormCtrl.title" class="width-100">
+        </label>
+      </form>
+      <p>List the players who will be in this tournament.</p>
+      <div class="table-container">
+        <table class="width-100">
+          <tr ng-repeat="player in RegistrationFormCtrl.players">
+            <td>{{ $index+1 }}</td>
+            <td><input type="text" ng-model="player.name" class="width-100" placeholder="Name"></td>
+          </tr>
+        </table>
+      </div>
+      <hr>
+      <button class="btn" ng-click="RegistrationFormCtrl.players.push({})">Add Player</button>
+      <button class="btn btn-green" ng-click="RegistrationFormCtrl.init()">Done</button>
+    </div>
+  </div>
+</main>
