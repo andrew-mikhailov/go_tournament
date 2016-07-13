@@ -1,3 +1,5 @@
 /app/vendor/
 node_modules/
 .idea/
+back_uptournament.json
+tournament.json
