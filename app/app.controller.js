@@ -36,6 +36,7 @@
           }
           MainCtrl.inited = true;
           MainCtrl.updatePlayerRanks();
+          MainCtrl.reorderMatches();
         }, function (response) {
           console.log(response);
         });
@@ -158,13 +159,16 @@
         MainCtrl.inited = true;
         MainCtrl.initPlayers();
         MainCtrl.createMatches();
+        MainCtrl.reorderMatches();
         MainCtrl.exportToStorage();
       };
 
-      MainCtrl.matchEvaluator = function (a) {
-        var statusorder = ['playing', 'queued', 'ended'];
-        var letters = ['a', 'b', 'c'];
-        return letters[statusorder.indexOf(a.status)] + a.index;
+      MainCtrl.matchEvaluator = function (match) {
+        var statusOrder = ['playing', 'queued', 'ended'];
+        var letters = [100, 200, 300];
+        console.log(letters[statusOrder.indexOf(match.status)] + match.index);
+
+        return letters[statusOrder.indexOf(match.status)] + match.index;
       };
 
       MainCtrl.getMatchesLeft = function () {
