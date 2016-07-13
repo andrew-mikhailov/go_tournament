@@ -20,7 +20,8 @@
     "angular-material": "^1.0.7",
     "angular-ui-router": "^0.2.18",
     "angular-sanitize": "^1.5.3",
-    "angular-gravatar": "^0.4.2"
+    "angular-gravatar": "^0.4.2",
+    "angularjs-mongolab": "^1.0.0-RC1"
   },
   "resolutions": {
     "angular": "1.5.5"

@@ -3,58 +3,77 @@
 
   angular
     .module('go_tournament')
-    .controller('MainController', function ($filter, TournamentConfig) {
+    .controller('MainController', function ($filter, $http, TournamentConfig) {
       var MainCtrl = this;
-        
-      MainCtrl.matches = [];
-      MainCtrl.players = TournamentConfig.players;
+
       var orderBy = $filter('orderBy');
 
-      MainCtrl.importFromStorage = function () {
-        var tourney = JSON.parse(localStorage.tourney);
-        MainCtrl.title = tourney.title;
-        MainCtrl.players = tourney.players;
-        MainCtrl.matches = tourney.matches;
-        // ugly way of rebind players to respective matches.
-        for (var m = 0; m < MainCtrl.matches.length; m++) {
-          for (var i = 0; i < MainCtrl.players.length; i++) {
-            if (MainCtrl.matches[m].players[0].id == MainCtrl.players[i].id)
-              MainCtrl.matches[m].players[0] = MainCtrl.players[i];
-            if (MainCtrl.matches[m].players[1].id == MainCtrl.players[i].id)
-              MainCtrl.matches[m].players[1] = MainCtrl.players[i];
-          }
+      MainCtrl.admin = false;
+      if (location.search) {
+        var query = location.search.split('?')[1].split('=');
+        if (query[0] === 'admin' && query[1] === 'true') {
+          MainCtrl.admin = true;
         }
-        MainCtrl.inited = true;
-        MainCtrl.updatePlayerRanks();
+      }
+
+      MainCtrl.importFromStorage = function () {
+        var promise = $http.get('/tournament');
+
+        promise.then(function (response) {
+          response = response.data;
+
+          MainCtrl.title = response.title || TournamentConfig.title;
+          MainCtrl.players = response.players || TournamentConfig.players;
+          MainCtrl.matches = response.matches || [];
+          // ugly way of rebind players to respective matches.
+          for (var m = 0; m < MainCtrl.matches.length; m++) {
+            for (var i = 0; i < MainCtrl.players.length; i++) {
+              if (MainCtrl.matches[m].players[0].id == MainCtrl.players[i].id)
+                MainCtrl.matches[m].players[0] = MainCtrl.players[i];
+              if (MainCtrl.matches[m].players[1].id == MainCtrl.players[i].id)
+                MainCtrl.matches[m].players[1] = MainCtrl.players[i];
+            }
+          }
+          MainCtrl.inited = true;
+          MainCtrl.updatePlayerRanks();
+        }, function (response) {
+          console.log(response);
+        });
       };
 
       MainCtrl.exportToStorage = function () {
-        localStorage.tourney = JSON.stringify({
-          players: MainCtrl.players,
-          matches: MainCtrl.matches,
-          title: MainCtrl.title,
-          inited: MainCtrl.inited
-        });
+        var promise = $http.post('/tournament', {
+            data: {
+              players: MainCtrl.players,
+              matches: MainCtrl.matches,
+              title: MainCtrl.title,
+              inited: MainCtrl.inited
+            }
+          });
+        promise.then(function (response) {
+          console.log(response);
+        }, function (response) {
+          console.log(response);
+        })
       };
 
       MainCtrl.initPlayers = function () {
         for (var p = 0; p < MainCtrl.players.length; p++) {
-          MainCtrl.players[p].won =
-            MainCtrl.players[p].lost =
-              MainCtrl.players[p].draw = 0;
-                MainCtrl.players[p].points = 0;
-          MainCtrl.players[p].rank = 0;
+          MainCtrl.players[p].won = MainCtrl.players[p].won || 0;
+          MainCtrl.players[p].lost = MainCtrl.players[p].lost || 0;
+          MainCtrl.players[p].points = MainCtrl.players[p].points || 0;
+          MainCtrl.players[p].rank = MainCtrl.players[p].rank || 0;
           MainCtrl.players[p].id = p;
         }
       };
 
       MainCtrl.updatePlayerRanks = function () {
-        MainCtrl.players = orderBy(MainCtrl.players, ['-won', '-draw', '-points']);
+        MainCtrl.players = orderBy(MainCtrl.players, ['-won', '-points']);
         var prev = MainCtrl.players[0];
         prev.rank = 1;
         for (var i = 1; i < MainCtrl.players.length; i++) {
           var curr = MainCtrl.players[i];
-          if (curr.won == prev.won && curr.draw == prev.draw) {
+          if (curr.won == prev.won) {
             curr.rank = prev.rank;
           } else {
             curr.rank = prev.rank + 1;
@@ -62,7 +81,7 @@
           }
         }
       };
-      
+
       MainCtrl.disableMatch = function (status) {
         var statuses = ['queued', 'ended'];
         return statuses.indexOf(status) != -1;
@@ -135,7 +154,7 @@
             i--;
           }
         }
-        
+
         MainCtrl.inited = true;
         MainCtrl.initPlayers();
         MainCtrl.createMatches();
@@ -145,6 +164,9 @@
       MainCtrl.matchEvaluator = function (a) {
         var statusorder = ['playing', 'queued', 'ended'];
         var letters = ['a', 'b', 'c'];
+
+        console.log(letters[statusorder.indexOf(a.status)] + a.index);
+
         return letters[statusorder.indexOf(a.status)] + a.index;
       };
 
@@ -172,20 +194,20 @@
         if (Number(match.scores[0]) > Number(match.scores[1])) {
           match.players[0].won -= 1;
           match.players[0].points -= 1 +
-            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
 
           match.players[1].lost -= 1;
           match.players[1].points -=
-            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
         }
         else {
           match.players[1].won -= 1;
           match.players[1].points -= 1 +
-            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
 
           match.players[0].lost -= 1;
           match.players[0].points -=
-            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
         }
         MainCtrl.updatePlayerRanks();
         MainCtrl.reorderMatches();
@@ -196,20 +218,20 @@
         if (Number(match.scores[0]) > Number(match.scores[1])) {
           match.players[0].won += 1;
           match.players[0].points += 1 +
-            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
 
           match.players[1].lost += 1;
           match.players[1].points +=
-            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
         }
         else {
           match.players[1].won += 1;
           match.players[1].points += 1 +
-            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
 
           match.players[0].lost += 1;
           match.players[0].points +=
-            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points)/TournamentConfig.points;
+            (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
         }
 
         MainCtrl.reorderMatches();
@@ -223,9 +245,7 @@
         MainCtrl.exportToStorage();
       };
 
-      if (localStorage.tourney) {
-        MainCtrl.importFromStorage();
-      }
+      MainCtrl.importFromStorage();
     });
 
 })(angular);

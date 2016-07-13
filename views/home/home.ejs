@@ -6,13 +6,13 @@
         width="60px"
         style="float: left; margin: 0 20px auto 0">
     <h1>{{ MainCtrl.title }}</h1>
-    <a ng-click="MainCtrl.reset()"
+    <a ng-if="MainCtrl.admin" ng-click="MainCtrl.reset()"
       class="reset-btn">
       Reset
     </a>
   </header>
   <main>
-    <div class="units-row" ng-if="!MainCtrl.inited">
+    <div class="units-row" ng-if="!MainCtrl.inited && MainCtrl.admin">
       <div class="unit-40 unit-centered">
         <form class="forms">
           <label>
@@ -45,13 +45,13 @@
             <tr>
               <th>#</th>
               <th>Name</th>
-              <th>Win / Draw / Lose</th>
+              <th>Win / Lose</th>
               <th>Points</th>
-              <th>Played</th>
+              <th>Games</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="player in MainCtrl.players | orderBy:['-won','-draw', '-points']">
+            <tr ng-repeat="player in MainCtrl.players | orderBy:['-won', '-points']">
               <td>
                 <i class="fa fa-trophy gold" ng-show="player.rank == 1"></i>
                 <i class="fa fa-trophy silver" ng-show="player.rank == 2"></i>
@@ -59,7 +59,7 @@
                 {{ player.rank }}
               </td>
               <td><img class="avatar-icon" gravatar-src-once="player.name" gravatar-size="100"></td>
-              <td>{{ player.won }} / {{ player.draw }} / {{ player.lost }}</td>
+              <td>{{ player.won }} / {{ player.lost }}</td>
               <td>{{ player.points  }}</td>
               <td>{{ player.won + player.lost + player.draw }}</td>
             </tr>
@@ -106,12 +106,13 @@
               </div>
             </div>
             <div class="left" ng-if="match.status == 'playing'">
-              <timer endtime="match.endtime"></timer>
+              <!--@TODO Remove timer-->
+              <!--<timer endtime="match.endtime"></timer>-->
             </div>
             <div class="center">
-              <button class="btn btn-black" ng-if="match.status == 'queued'" ng-click="MainCtrl.startMatch(match)">Start Match</button>
-              <button class="btn btn-black" ng-if="match.status == 'playing'" ng-click="MainCtrl.endMatch(match)">End Match</button>
-              <button class="btn btn-black" ng-if="match.status == 'ended'" ng-click="MainCtrl.editMatch(match)">Edit Match</button>
+              <button class="btn btn-black" ng-if="match.status == 'queued' && MainCtrl.admin" ng-click="MainCtrl.startMatch(match)">Start Match</button>
+              <button class="btn btn-black" ng-if="match.status == 'playing' && MainCtrl.admin" ng-click="MainCtrl.endMatch(match)">End Match</button>
+              <button class="btn btn-black" ng-if="match.status == 'ended' && MainCtrl.admin" ng-click="MainCtrl.editMatch(match)">Edit Match</button>
             </div>
           </div>
         </form>

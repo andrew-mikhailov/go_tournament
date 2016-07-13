@@ -4,6 +4,7 @@
   angular
     .module('go_tournament', [
       'timer',
+      'mongolabResourceHttp',
       'ui.router',
       'ui.gravatar',
       'ngSanitize'
