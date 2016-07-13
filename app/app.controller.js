@@ -164,9 +164,6 @@
       MainCtrl.matchEvaluator = function (a) {
         var statusorder = ['playing', 'queued', 'ended'];
         var letters = ['a', 'b', 'c'];
-
-        console.log(letters[statusorder.indexOf(a.status)] + a.index);
-
         return letters[statusorder.indexOf(a.status)] + a.index;
       };
 
