@@ -38,7 +38,7 @@
           MainCtrl.updatePlayerRanks();
           MainCtrl.reorderMatches();
         }, function (response) {
-          console.log(response);
+          // console.log(response);
         });
       };
 
@@ -52,9 +52,9 @@
             }
           });
         promise.then(function (response) {
-          console.log(response);
+          // console.log(response);
         }, function (response) {
-          console.log(response);
+          // console.log(response);
         })
       };
 
@@ -166,7 +166,6 @@
       MainCtrl.matchEvaluator = function (match) {
         var statusOrder = ['playing', 'queued', 'ended'];
         var letters = [100, 200, 300];
-        console.log(letters[statusOrder.indexOf(match.status)] + match.index);
 
         return letters[statusOrder.indexOf(match.status)] + match.index;
       };
