@@ -19,13 +19,17 @@
         {name: 'gulya.i@devicement.com'}
       ]
     })
-    .constant('MONGOLAB_CONFIG', {
-        API_KEY: '--O9QFZaHymh87TkAK7IrlYYwL4sRIYa',
-        DB_NAME: 'go_tournament'
+    .constant('FIREBASE_CONFIG', {
+        apiKey: "AIzaSyDKoTHp5IgWsCBUpWS7Nfp7kG2E99P7zzE",
+        authDomain: "go-tournament-1b80b.firebaseapp.com",
+        databaseURL: "https://go-tournament-1b80b.firebaseio.com",
+        storageBucket: "go-tournament-1b80b.appspot.com"
       }
     )
-    .factory('tournamentsService', function ($mongolabResourceHttp) {
-      return $mongolabResourceHttp('tournaments');
+    .factory('tournamentsService', function (FIREBASE_CONFIG) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+
+      return firebase.database();
     });
 
 })(angular);
