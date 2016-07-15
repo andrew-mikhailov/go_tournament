@@ -208,9 +208,12 @@
 
       MainCtrl.endMatch = function (match) {
         var mathPoints = 0,
-            increment;
+            increment,
+            loser,
+            winner;
 
         match.status = 'ended';
+        // Algorithm Elo rating system.
         if (Number(match.scores[0]) > Number(match.scores[1])) {
           match.players[0].won += 1;
           match.players[0].points += 1 +
@@ -222,10 +225,8 @@
 
           mathPoints = 1 / (1 + Math.pow(10, (match.players[1].rating - match.players[0].rating) / 400));
           increment = 10*(1 - mathPoints);
-          match.players[0].lastRating = match.players[0].rating;
-          match.players[0].rating = Math.ceil(match.players[0].rating + increment);
-          match.players[1].lastRating = match.players[1].rating;
-          match.players[1].rating = Math.ceil(match.players[1].rating - increment);
+          winner = match.players[0];
+          loser = match.players[1];
         }
         else {
           match.players[1].won += 1;
@@ -238,12 +239,14 @@
 
           mathPoints = 1 / (1 + Math.pow(10, (match.players[0].rating - match.players[1].rating) / 400));
           increment = 40*(1 - mathPoints);
-          match.players[1].lastRating = match.players[1].rating;
-          match.players[1].rating = Math.ceil(match.players[1].rating + increment);
-          match.players[0].lastRating = match.players[0].rating;
-          match.players[0].rating = Math.ceil(match.players[0].rating - increment);
+          winner = match.players[2];
+          loser = match.players[2];
         }
 
+        winner.lastRating = winner.rating;
+        winner.rating = Math.ceil(winner.rating + increment);
+        loser.lastRating = loser.rating;
+        loser.rating = Math.ceil(loser.rating - increment);
         MainCtrl.reorderMatches();
         MainCtrl.updatePlayerRanks();
       };
