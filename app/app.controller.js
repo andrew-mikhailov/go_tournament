@@ -3,7 +3,7 @@
 
   angular
     .module('go_tournament')
-    .controller('MainController', function ($rootScope, $filter, TournamentConfig, tournamentsService) {
+    .controller('MainController', function ($rootScope, $filter, TournamentConfig, tournamentsService, FIREBASE_CONFIG) {
       var MainCtrl = this;
       MainCtrl.regex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
@@ -12,7 +12,7 @@
       MainCtrl.admin = false;
       if (location.search) {
         var query = location.search.split('?')[1].split('=');
-        if (query[0] === 'admin' && query[1] === 'true') {
+        if (query[0] === 'admin' && query[1] === FIREBASE_CONFIG.apiKey) {
           MainCtrl.admin = true;
         }
       }
