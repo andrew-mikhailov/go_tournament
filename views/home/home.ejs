@@ -72,8 +72,8 @@
       <div class="unit-40">
         <h2>Matches</h2>
         <p>Matches left: {{ MainCtrl.getMatchesLeft() }}</p>
-        <form class="forms width-100">
-          <div ng-repeat="match in MainCtrl.matches | orderBy:matchEvaluator" class="match units-row width-100"
+        <div class="forms width-100">
+          <form name="competition"  ng-repeat="match in MainCtrl.matches | orderBy:matchEvaluator" class="match units-row width-100"
                ng-class="match.status">
             <h4>#{{ match.index+1 }}</h4>
             <div class="unit-centered unit-70 units-row end">
@@ -82,10 +82,12 @@
                   <img class="avatar-icon" gravatar-src-once="match.players[0].name" gravatar-size="80">
                   <input
                       type="text"
+                      name="firstPlayer"
                       ng-model="match.scores[0]"
                       class="width-100 input-score"
                       ng-if="match.status == 'playing' && MainCtrl.admin"
                       ng-disabled="MainCtrl.disableMatch(match.status)"
+                      ng-pattern="MainCtrl.regex"
                       required>
                   <span class="score" ng-if="match.status == 'ended'">{{ match.scores[0] }}</span>
                 </label>
@@ -100,10 +102,12 @@
                   <img class="avatar-icon" gravatar-src-once="match.players[1].name" gravatar-size="80">
                   <input
                       type="text"
+                      name="secondPlayer"
                       ng-model="match.scores[1]"
                       class="width-100 input-score"
                       ng-if="match.status == 'playing' && MainCtrl.admin"
                       ng-disabled="MainCtrl.disableMatch(match.status)"
+                      ng-pattern="MainCtrl.regex"
                       required>
                   <span class="score" ng-if="match.status == 'ended'">{{ match.scores[1] }}</span>
                 </label>
@@ -115,11 +119,16 @@
             </div>
             <div class="center">
               <button class="btn btn-black" ng-if="match.status == 'queued' && MainCtrl.admin" ng-click="MainCtrl.startMatch(match)">Start Match</button>
-              <button class="btn btn-black" ng-if="match.status == 'playing' && MainCtrl.admin" ng-click="MainCtrl.endMatch(match)">End Match</button>
+              <button class="btn btn-black"
+                      ng-disabled="!competition.firstPlayer.$valid || !competition.secondPlayer.$valid"
+                      ng-if="match.status == 'playing' && MainCtrl.admin"
+                      ng-click="MainCtrl.endMatch(match)">
+                End Match
+              </button>
               <button class="btn btn-black" ng-if="match.status == 'ended' && MainCtrl.admin" ng-click="MainCtrl.editMatch(match)">Edit Match</button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </main>
