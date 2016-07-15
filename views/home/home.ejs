@@ -84,8 +84,10 @@
                       type="text"
                       ng-model="match.scores[0]"
                       class="width-100 input-score"
+                      ng-if="match.status == 'playing' && MainCtrl.admin"
                       ng-disabled="MainCtrl.disableMatch(match.status)"
                       required>
+                  <span class="score" ng-if="match.status == 'ended'">{{ match.scores[0] }}</span>
                 </label>
               </div>
 
@@ -100,8 +102,10 @@
                       type="text"
                       ng-model="match.scores[1]"
                       class="width-100 input-score"
+                      ng-if="match.status == 'playing' && MainCtrl.admin"
                       ng-disabled="MainCtrl.disableMatch(match.status)"
                       required>
+                  <span class="score" ng-if="match.status == 'ended'">{{ match.scores[1] }}</span>
                 </label>
               </div>
             </div>
