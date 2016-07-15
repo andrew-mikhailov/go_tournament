@@ -52,6 +52,8 @@
           MainCtrl.players[p].lost = MainCtrl.players[p].lost || 0;
           MainCtrl.players[p].points = MainCtrl.players[p].points || 0;
           MainCtrl.players[p].rank = MainCtrl.players[p].rank || 0;
+          MainCtrl.players[p].rating = MainCtrl.players[p].rating || 100;
+          MainCtrl.players[p].lastRating = MainCtrl.players[p].lastRating || MainCtrl.players[p].rating;
           MainCtrl.players[p].id = p;
         }
       };
@@ -197,12 +199,21 @@
           match.players[0].points -=
             (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
         }
+        match.players[1].rating = match.players[1].lastRating;
+        match.players[0].rating = match.players[0].lastRating;
+
         MainCtrl.updatePlayerRanks();
         MainCtrl.reorderMatches();
       };
 
       MainCtrl.endMatch = function (match) {
+        var mathPoints = 0,
+            increment,
+            loser,
+            winner;
+
         match.status = 'ended';
+        // Algorithm Elo rating system.
         if (Number(match.scores[0]) > Number(match.scores[1])) {
           match.players[0].won += 1;
           match.players[0].points += 1 +
@@ -211,6 +222,11 @@
           match.players[1].lost += 1;
           match.players[1].points +=
             (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
+
+          mathPoints = 1 / (1 + Math.pow(10, (match.players[1].rating - match.players[0].rating) / 400));
+          increment = 10*(1 - mathPoints);
+          winner = match.players[0];
+          loser = match.players[1];
         }
         else {
           match.players[1].won += 1;
@@ -220,8 +236,17 @@
           match.players[0].lost += 1;
           match.players[0].points +=
             (Number(match.scores[0]) - Number(match.scores[0]) % TournamentConfig.points) / TournamentConfig.points;
+
+          mathPoints = 1 / (1 + Math.pow(10, (match.players[0].rating - match.players[1].rating) / 400));
+          increment = 40*(1 - mathPoints);
+          winner = match.players[2];
+          loser = match.players[2];
         }
 
+        winner.lastRating = winner.rating;
+        winner.rating = Math.ceil(winner.rating + increment);
+        loser.lastRating = loser.rating;
+        loser.rating = Math.ceil(loser.rating - increment);
         MainCtrl.reorderMatches();
         MainCtrl.updatePlayerRanks();
       };
