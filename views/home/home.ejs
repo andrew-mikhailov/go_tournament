@@ -120,7 +120,7 @@
             <div class="center">
               <button class="btn btn-black" ng-if="match.status == 'queued' && MainCtrl.admin" ng-click="MainCtrl.startMatch(match)">Start Match</button>
               <button class="btn btn-black"
-                      ng-disabled="!competition.firstPlayer.$valid || !competition.secondPlayer.$valid"
+                      ng-disabled="!competition.firstPlayer.$valid || !competition.secondPlayer.$valid || match.scores[0] === match.scores[1]"
                       ng-if="match.status == 'playing' && MainCtrl.admin"
                       ng-click="MainCtrl.endMatch(match)">
                 End Match
