@@ -5,7 +5,7 @@
     .module('go_tournament')
     .controller('MainController', function ($rootScope, $filter, TournamentConfig, tournamentsService) {
       var MainCtrl = this;
-      MainCtrl.regex = /^\d+$/;
+      MainCtrl.regex = /^[0-9]+(\.[0-9]{1,2})?$/;
 
       var orderBy = $filter('orderBy');
 
