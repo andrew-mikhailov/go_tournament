@@ -224,7 +224,7 @@
             (Number(match.scores[1]) - Number(match.scores[1]) % TournamentConfig.points) / TournamentConfig.points;
 
           mathPoints = 1 / (1 + Math.pow(10, (match.players[1].rating - match.players[0].rating) / 400));
-          increment = 10*(1 - mathPoints);
+          increment = 40*(1 - mathPoints);
           winner = match.players[0];
           loser = match.players[1];
         }
@@ -239,8 +239,8 @@
 
           mathPoints = 1 / (1 + Math.pow(10, (match.players[0].rating - match.players[1].rating) / 400));
           increment = 40*(1 - mathPoints);
-          winner = match.players[2];
-          loser = match.players[2];
+          winner = match.players[1];
+          loser = match.players[0];
         }
 
         winner.lastRating = winner.rating;
