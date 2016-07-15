@@ -3,7 +3,7 @@
 
   angular
     .module('go_tournament')
-    .controller('MainController', function ($filter, $http, TournamentConfig) {
+    .controller('MainController', function ($rootScope, $filter, TournamentConfig, tournamentsService) {
       var MainCtrl = this;
 
       var orderBy = $filter('orderBy');
@@ -16,46 +16,33 @@
         }
       }
 
-      MainCtrl.importFromStorage = function () {
-        var promise = $http.get('/tournament');
-
-        promise.then(function (response) {
-          response = response.data;
-
-          MainCtrl.title = response.title || TournamentConfig.title;
-          MainCtrl.players = response.players || TournamentConfig.players;
-          MainCtrl.matches = response.matches || [];
-          // ugly way of rebind players to respective matches.
-          for (var m = 0; m < MainCtrl.matches.length; m++) {
-            for (var i = 0; i < MainCtrl.players.length; i++) {
-              if (MainCtrl.matches[m].players[0].id == MainCtrl.players[i].id)
-                MainCtrl.matches[m].players[0] = MainCtrl.players[i];
-              if (MainCtrl.matches[m].players[1].id == MainCtrl.players[i].id)
-                MainCtrl.matches[m].players[1] = MainCtrl.players[i];
-            }
+      MainCtrl.importFromStorage = function (data) {
+        MainCtrl.title = data.title || TournamentConfig.title;
+        MainCtrl.players = data.players || TournamentConfig.players;
+        MainCtrl.matches = data.matches || [];
+        // ugly way of rebind players to respective matches.
+        for (var m = 0; m < MainCtrl.matches.length; m++) {
+          for (var i = 0; i < MainCtrl.players.length; i++) {
+            if (MainCtrl.matches[m].players[0].id == MainCtrl.players[i].id)
+              MainCtrl.matches[m].players[0] = MainCtrl.players[i];
+            if (MainCtrl.matches[m].players[1].id == MainCtrl.players[i].id)
+              MainCtrl.matches[m].players[1] = MainCtrl.players[i];
           }
-          MainCtrl.inited = true;
-          MainCtrl.updatePlayerRanks();
-          MainCtrl.reorderMatches();
-        }, function (response) {
-          // console.log(response);
-        });
+        }
+        MainCtrl.inited = true;
+        MainCtrl.updatePlayerRanks();
+        MainCtrl.reorderMatches();
       };
 
       MainCtrl.exportToStorage = function () {
-        var promise = $http.post('/tournament', {
-            data: {
-              players: MainCtrl.players,
-              matches: MainCtrl.matches,
-              title: MainCtrl.title,
-              inited: MainCtrl.inited
-            }
-          });
-        promise.then(function (response) {
-          // console.log(response);
-        }, function (response) {
-          // console.log(response);
-        })
+        var newData = {
+          players: angular.copy(MainCtrl.players),
+          matches: angular.copy(MainCtrl.matches),
+          title: angular.copy(MainCtrl.title),
+          inited: angular.copy(MainCtrl.inited)
+        };
+
+        tournamentsService.ref('old-db').set(newData);
       };
 
       MainCtrl.initPlayers = function () {
@@ -239,13 +226,26 @@
       };
 
       MainCtrl.reset = function () {
-        MainCtrl.matches = [];
-        MainCtrl.players = TournamentConfig.players;
-        MainCtrl.inited = false;
-        MainCtrl.exportToStorage();
+        tournamentsService.ref('old-db').once('value', function(oldData) {
+          var data = oldData.val();
+          var key = tournamentsService.ref().child('bkps').push().key;
+
+          var updates = {};
+          updates[key] = angular.toJson(data);
+
+          tournamentsService.ref('bkps').update(updates);
+
+          tournamentsService.ref('default-db').once('value', function(defaultData) {
+            tournamentsService.ref('old-db').set(defaultData.val());
+          });
+        });
       };
 
-      MainCtrl.importFromStorage();
+      tournamentsService.ref('old-db').on('value', function(oldData) {
+        MainCtrl.importFromStorage(oldData.val());
+
+        $rootScope.safeApply();
+      });
     });
 
 })(angular);
