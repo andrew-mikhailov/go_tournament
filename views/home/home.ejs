@@ -47,6 +47,7 @@
               <th>Name</th>
               <th>Win / Lose</th>
               <th>Points</th>
+              <th>Rating</th>
               <th>Games</th>
             </tr>
             </thead>
@@ -61,7 +62,8 @@
               <td><img class="avatar-icon" gravatar-src-once="player.name" gravatar-size="100"></td>
               <td>{{ player.won }} / {{ player.lost }}</td>
               <td>{{ player.points  }}</td>
-              <td>{{ player.won + player.lost + player.draw }}</td>
+              <td>{{ player.rating }}</td>
+              <td>{{ player.won + player.lost }}</td>
             </tr>
             </tbody>
           </table>
@@ -113,11 +115,10 @@
                 </label>
               </div>
             </div>
-            <div class="left" ng-if="match.status == 'playing'">
-              <!--@TODO Remove timer-->
-              <!--<timer endtime="match.endtime"></timer>-->
-            </div>
             <div class="center">
+              <div class="left" ng-if="match.status == 'playing'">
+                <timer endtime="match.endtime"></timer>
+              </div>
               <button class="btn btn-black" ng-if="match.status == 'queued' && MainCtrl.admin" ng-click="MainCtrl.startMatch(match)">Start Match</button>
               <button class="btn btn-black"
                       ng-disabled="!competition.firstPlayer.$valid || !competition.secondPlayer.$valid || match.scores[0] === match.scores[1]"
